@@ -24,7 +24,7 @@ cargo install sherpa
 To get started run:
 
 ```bash
-sherpa authenticate <github-token>
+sherpa authenticate <github-handle> <github-token>
 ```
 
 ## Contributing
