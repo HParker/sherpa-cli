@@ -1,5 +1,5 @@
 use clap::{ArgMatches};
-use reqwest;
+use reqwest::{Client, Error as ReqwestError};
 use std::collections::HashMap;
 
 const BASE_URL: &'static str = "https://sherpa.procoretech.com/api/v1";
@@ -13,8 +13,8 @@ pub fn run(matches: &ArgMatches) {
     println!("{:?}", token);
 }
 
-fn request_token(github_token: &str) -> Result<HashMap<String, String>, reqwest::Error> {
-    let client = try!(reqwest::Client::new());
+fn request_token(github_token: &str) -> Result<HashMap<String, String>, ReqwestError> {
+    let client = try!(Client::new());
     let url = BASE_URL.to_owned() + "/token";
 
     let mut nested_body = HashMap::new();
