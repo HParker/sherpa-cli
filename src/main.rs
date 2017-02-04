@@ -7,6 +7,7 @@ extern crate serde_json;
 
 mod authentication;
 mod cli;
+mod error;
 
 use clap::{ArgMatches};
 

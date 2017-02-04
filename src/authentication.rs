@@ -1,6 +1,8 @@
 use clap::{ArgMatches};
-use reqwest::{Client, Error as ReqwestError, StatusCode};
+use error::Error;
+use reqwest::Client;
 use std::collections::HashMap;
+use std::io::Read;
 
 const BASE_URL: &'static str = "https://sherpa.procoretech.com/api/v1";
 
@@ -19,7 +21,7 @@ pub fn run(matches: &ArgMatches) {
     println!("{:?}", response);
 }
 
-fn request_token(github_token: &str) -> Result<TokenResponse, ReqwestError> {
+fn request_token(github_token: &str) -> Result<TokenResponse, Error> {
     let client = try!(Client::new());
     let url = BASE_URL.to_owned() + "/token";
 
@@ -32,8 +34,10 @@ fn request_token(github_token: &str) -> Result<TokenResponse, ReqwestError> {
     let mut response = try!(client.post(&url).json(&body).send());
 
     if response.status().is_success() {
-        response.json::<TokenResponse>()
+        Ok(try!(response.json::<TokenResponse>()))
     } else {
-        Err(ReqwestError::TooManyRedirects)
+        let mut response_body = String::new();
+        response.read_to_string(&mut response_body);
+        Err(Error::HttpError(response_body))
     }
 }
