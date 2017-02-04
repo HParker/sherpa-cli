@@ -1,3 +1,5 @@
+#![deny(warnings)]
+
 extern crate clap;
 extern crate reqwest;
 extern crate serde;
@@ -8,8 +10,6 @@ extern crate serde_json;
 mod authentication;
 mod cli;
 mod error;
-
-use clap::{ArgMatches};
 
 fn main() {
     let matches = cli::build_cli().get_matches();

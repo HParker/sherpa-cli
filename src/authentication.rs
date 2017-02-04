@@ -42,7 +42,7 @@ fn request_token(github_handle: &str, github_token: &str) -> Result<TokenRespons
         Ok(try!(response.json::<TokenResponse>()))
     } else {
         let mut response_body = String::new();
-        response.read_to_string(&mut response_body);
+        try!(response.read_to_string(&mut response_body));
         Err(Error::HttpError(response_body))
     }
 }
