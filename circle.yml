@@ -1,0 +1,9 @@
+machine:
+  pre:
+    - curl -sf https://static.rust-lang.org/rustup.sh > rustup.sh
+    - sudo sh ./rustup.sh --yes
+      # Circle's default gitconfig does not play nicely with Cargo
+    - rm .gitconfig
+test:
+  override:
+    - eval `ssh-agent` && ssh-add /home/ubuntu/.ssh/id_circleci_github && cargo test --verbose
