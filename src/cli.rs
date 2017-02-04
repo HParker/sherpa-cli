@@ -3,9 +3,13 @@ use clap::{App, AppSettings, Arg, SubCommand};
 pub fn build_cli() -> App<'static, 'static> {
     let setup_subcommand = SubCommand::with_name("authenticate")
         .about("Setup Sherpa CLI")
+        .arg(Arg::with_name("handle")
+             .help("Github handle")
+             .index(1)
+             .required(true))
         .arg(Arg::with_name("token")
              .help("Personal Github Access Token")
-             .index(1)
+             .index(2)
              .required(true));
 
     App::new("sherpa")

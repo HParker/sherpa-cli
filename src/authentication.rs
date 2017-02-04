@@ -13,19 +13,24 @@ struct TokenResponse {
 }
 
 pub fn run(matches: &ArgMatches) {
+    let github_handle = matches
+        .value_of("handle")
+        .expect("Expected required handle");
+
     let github_token = matches
         .value_of("token")
         .expect("Expected required token");
 
-    let response = request_token(github_token);
+    let response = request_token(github_handle, github_token);
     println!("{:?}", response);
 }
 
-fn request_token(github_token: &str) -> Result<TokenResponse, Error> {
+fn request_token(github_handle: &str, github_token: &str) -> Result<TokenResponse, Error> {
     let client = try!(Client::new());
     let url = BASE_URL.to_owned() + "/token";
 
     let mut nested_body = HashMap::new();
+    nested_body.insert("handle", github_handle);
     nested_body.insert("access_token", github_token);
 
     let mut body = HashMap::new();
