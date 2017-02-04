@@ -5,7 +5,8 @@ pub fn build_cli() -> App<'static, 'static> {
         .about("Setup Sherpa CLI")
         .arg(Arg::with_name("token")
              .help("Personal Github Access Token")
-             .index(1));
+             .index(1)
+             .required(true));
 
     App::new("sherpa")
         .version("0.1")

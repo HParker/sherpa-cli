@@ -5,3 +5,7 @@ authors = ["Michael Stock <mikeastock@gmail.com>"]
 
 [dependencies]
 clap = "2.20"
+reqwest = "0.4.0"
+serde = "0.9"
+serde_derive = "0.9"
+serde_json = "0.9"
