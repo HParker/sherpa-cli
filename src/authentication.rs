@@ -1,4 +1,5 @@
 use clap::{ArgMatches};
+use config::create_or_update_config;
 use error::Error;
 use reqwest::Client;
 use std::collections::HashMap;
@@ -21,8 +22,14 @@ pub fn run(matches: &ArgMatches) {
         .value_of("token")
         .expect("Expected required token");
 
-    let response = request_token(github_handle, github_token);
-    println!("{:?}", response);
+    match request_token(github_handle, github_token) {
+        Ok(token_response) => {
+            create_or_update_config(github_handle, github_token, &token_response.token);
+        },
+        Err(error) => {
+            println!("{:?}", error)
+        },
+    }
 }
 
 fn request_token(github_handle: &str, github_token: &str) -> Result<TokenResponse, Error> {
