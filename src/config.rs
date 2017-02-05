@@ -1,8 +1,9 @@
-use serde;
 use serde_json;
-use std::path::Path;
 use std::env;
+use std::fs::File;
 use std::fs::create_dir_all;
+use std::io::{Write, Read, Error as IoError};
+use std::path::Path;
 
 #[derive(Clone, Serialize, Deserialize, Debug, PartialEq)]
 pub struct Config {
@@ -31,11 +32,12 @@ pub fn save_config(config: Config, optional_path: Option<String>) {
 
     match serde_json::to_string(&config) {
         Ok(json) => {
-            json;
+            match save_file(path, json) {
+                Err(error) => println!("{:?}", error),
+                _ => (),
+            };
         },
-        Err(error) => {
-            println!("{:?}", error);
-        },
+        Err(error) => println!("{:?}", error),
     }
 }
 
@@ -45,7 +47,28 @@ pub fn load_config(optional_path: Option<String>) -> Option<Config> {
         None => default_path(),
     };
 
-    None
+    match load_file(path) {
+        Ok(json) => {
+            match serde_json::from_str::<Config>(&json) {
+                Ok(config) => Some(config),
+                Err(_) => None,
+            }
+        },
+        Err(_) => None,
+    }
+}
+
+fn save_file(path: String, json: String) -> Result<(), IoError> {
+    let config_path = Path::new(&path).join("config");
+    let mut file = try!(File::create(config_path));
+    file.write_all(json.as_bytes())
+}
+
+fn load_file(path: String) -> Result<String, IoError> {
+    let mut file = try!(File::open(path.clone()));
+    let mut json = String::new();
+    try!(file.read_to_string(&mut json));
+    Ok(json)
 }
 
 fn default_path() -> String {
@@ -75,7 +98,7 @@ mod test {
 
         let config = Config::new(github_handle, github_token, token, expires_at);
 
-        let tempdir = TempDir::new("test_save_config").unwrap();
+        let tempdir = TempDir::new("test_save_config").expect("Create temp dir");
 
         let tempdir_path_string = tempdir
             .path()
@@ -96,6 +119,6 @@ mod test {
 
         assert_eq!(expected_config, Some(config));
 
-        tempdir.close();
+        tempdir.close().expect("Remove temp dir");
     }
 }
