@@ -14,7 +14,7 @@ pub struct Config {
 }
 
 impl Config {
-    fn new(github_handle: &str, github_token: &str, token: &str, expires_at: &str) -> Config {
+    pub fn new(github_handle: &str, github_token: &str, token: &str, expires_at: &str) -> Config {
         Config {
             github_handle: github_handle.into(),
             github_token: github_token.into(),

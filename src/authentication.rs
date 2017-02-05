@@ -3,6 +3,7 @@ use error::Error;
 use reqwest::Client;
 use std::collections::HashMap;
 use std::io::Read;
+use config::{Config, save_config};
 
 const BASE_URL: &'static str = "https://sherpa.procoretech.com/api/v1";
 
@@ -23,6 +24,12 @@ pub fn run(matches: &ArgMatches) {
 
     match request_token(github_handle, github_token) {
         Ok(token_response) => {
+            let config = Config::new(
+                github_handle,
+                github_token,
+                &token_response.token,
+                &token_response.expires_at);
+            save_config(config, None);
         },
         Err(error) => {
             println!("{:?}", error)
