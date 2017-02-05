@@ -1,9 +1,9 @@
-use clap::{ArgMatches};
+use clap::ArgMatches;
+use config::{Config, save_config};
 use error::Error;
 use reqwest::Client;
 use std::collections::HashMap;
 use std::io::Read;
-use config::{Config, save_config};
 
 const BASE_URL: &'static str = "https://sherpa.procoretech.com/api/v1";
 
