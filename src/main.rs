@@ -33,7 +33,7 @@ fn handle_error<E: StdError, T>(error: E) -> T {
 }
 
 fn load_config() -> Config {
-    match config::load_config(None) {
+    match config::load_config(None).unwrap_or_else(handle_error) {
         Some(config) => config,
         None => {
             println!("You must be authenticated to use Sherpa");
