@@ -1,7 +1,5 @@
 # Sherpa
 
-[![CircleCI](https://circleci.com/gh/mikeastock/sherpa-cli/tree/master.svg?style=svg&circle-token=9927791d9ea599cfec466bfc0968270289f6971d)](https://circleci.com/gh/mikeastock/sherpa-cli/tree/master)
-
 A CLI for using Sherpa from the command line.  This tool allows you to deploy
 from the comfort of your console.
 
