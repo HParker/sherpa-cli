@@ -100,7 +100,7 @@ mod test {
             .unwrap()
             .to_owned();
 
-        save_config(config.clone(), Some(tempdir_path_string));
+        save_config(config.clone(), Some(tempdir_path_string)).unwrap();
 
         let config_path_string = tempdir
             .path()

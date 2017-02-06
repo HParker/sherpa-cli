@@ -8,7 +8,7 @@ use std::io::Error as IoError;
 pub enum Error {
     Http(String),
     Io(IoError),
-    JsonError(SerdeError),
+    Json(SerdeError),
 }
 
 use self::Error::*;
@@ -18,7 +18,7 @@ impl StdError for Error {
         match *self {
             Http(ref description) => description,
             Io(ref io_error) => io_error.description(),
-            JsonError(ref serde_error) => serde_error.description(),
+            Json(ref serde_error) => serde_error.description(),
         }
     }
 }
@@ -43,6 +43,6 @@ impl From<IoError> for Error {
 
 impl From<SerdeError> for Error {
     fn from(error: SerdeError) -> Error {
-        JsonError(error)
+        Json(error)
     }
 }
