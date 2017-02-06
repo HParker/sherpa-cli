@@ -50,6 +50,6 @@ fn request_token(github_handle: &str, github_token: &str) -> Result<TokenRespons
     } else {
         let mut response_body = String::new();
         try!(response.read_to_string(&mut response_body));
-        Err(Error::HttpError(response_body))
+        Err(Error::Http(response_body))
     }
 }

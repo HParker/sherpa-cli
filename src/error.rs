@@ -6,7 +6,7 @@ use std::io::Error as IoError;
 
 #[derive(Debug)]
 pub enum Error {
-    HttpError(String),
+    Http(String),
     Io(IoError),
     JsonError(SerdeError),
 }
@@ -16,7 +16,7 @@ use self::Error::*;
 impl StdError for Error {
     fn description(&self) -> &str {
         match *self {
-            HttpError(ref description) => description,
+            Http(ref description) => description,
             Io(ref io_error) => io_error.description(),
             JsonError(ref serde_error) => serde_error.description(),
         }
@@ -31,7 +31,7 @@ impl fmt::Display for Error {
 
 impl From<ReqwestError> for Error {
     fn from(error: ReqwestError) -> Error {
-        HttpError(error.description().into())
+        Http(error.description().into())
     }
 }
 
