@@ -35,15 +35,21 @@ pub fn save_config(config: Config, optional_path: Option<String>) -> Result<(), 
     save_file(path, json).map_err(Error::Io)
 }
 
-pub fn load_config(optional_path: Option<String>) -> Result<Option<Config>, Error> {
+pub fn load_config(optional_path: Option<String>) -> Option<Config> {
     let path = match optional_path {
         Some(path) => path,
         None => default_path(),
     };
 
-    let json = try!(load_file(path));
-    let config: Config = try!(serde_json::from_str::<Config>(&json));
-    Ok(Some(config))
+    match load_file(path) {
+        Ok(json) => {
+            match serde_json::from_str::<Config>(&json) {
+                Ok(config) => Some(config),
+                Err(_) => None,
+            }
+        },
+        Err(_) => None,
+    }
 }
 
 fn save_file(path: String, json: String) -> Result<(), IoError> {
@@ -102,7 +108,7 @@ mod test {
             .unwrap()
             .into();
 
-        let expected_config = load_config(Some(config_path_string)).unwrap();
+        let expected_config = load_config(Some(config_path_string));
 
         assert_eq!(expected_config, Some(config));
 
