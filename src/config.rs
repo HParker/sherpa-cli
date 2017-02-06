@@ -98,7 +98,6 @@ mod test {
 
         let config_path_string = tempdir
             .path()
-            .join("config")
             .to_str()
             .unwrap()
             .into();
