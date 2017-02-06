@@ -2,6 +2,11 @@
 name = "sherpa"
 version = "0.1.0"
 authors = ["Michael Stock <mikeastock@gmail.com>"]
+description = "A command line tool for interacting with Sherpa"
+license = "MIT"
+documentation = "https://github.com/mikeastock/sherpa-cli"
+homepage = "https://github.com/mikeastock/sherpa-cli"
+repository = "https://github.com/mikeastock/sherpa-cli"
 
 [dependencies]
 clap = "2.20"
