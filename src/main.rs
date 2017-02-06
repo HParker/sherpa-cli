@@ -8,6 +8,7 @@ extern crate serde_json;
 
 mod authentication;
 mod cli;
+mod client;
 mod config;
 mod deploy;
 mod error;
