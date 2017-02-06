@@ -1,3 +1,4 @@
+use error::Error;
 use serde_json;
 use std::env;
 use std::fs::File;
@@ -24,21 +25,14 @@ impl Config {
     }
 }
 
-pub fn save_config(config: Config, optional_path: Option<String>) {
+pub fn save_config(config: Config, optional_path: Option<String>) -> Result<(), Error> {
     let path = match optional_path {
         Some(path) => path,
         None => default_path(),
     };
 
-    match serde_json::to_string(&config) {
-        Ok(json) => {
-            match save_file(path, json) {
-                Err(error) => println!("{:?}", error),
-                _ => (),
-            };
-        },
-        Err(error) => println!("{:?}", error),
-    }
+    let json = try!(serde_json::to_string(&config));
+    save_file(path, json).map_err(Error::Io)
 }
 
 pub fn load_config(optional_path: Option<String>) -> Option<Config> {

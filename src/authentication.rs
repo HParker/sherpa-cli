@@ -13,7 +13,7 @@ struct TokenResponse {
     expires_at: String,
 }
 
-pub fn run(matches: &ArgMatches) {
+pub fn run(matches: &ArgMatches) -> Result<(), Error> {
     let github_handle = matches
         .value_of("handle")
         .expect("Expected required handle");
@@ -22,19 +22,14 @@ pub fn run(matches: &ArgMatches) {
         .value_of("token")
         .expect("Expected required token");
 
-    match request_token(github_handle, github_token) {
-        Ok(token_response) => {
-            let config = Config::new(
-                github_handle,
-                github_token,
-                &token_response.token,
-                &token_response.expires_at);
-            save_config(config, None);
-        },
-        Err(error) => {
-            println!("{:?}", error)
-        },
-    }
+    let token_response = try!(request_token(github_handle, github_token));
+    let config = Config::new(
+        github_handle,
+        github_token,
+        &token_response.token,
+        &token_response.expires_at);
+
+    save_config(config, None)
 }
 
 fn request_token(github_handle: &str, github_token: &str) -> Result<TokenResponse, Error> {

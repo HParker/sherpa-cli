@@ -1,12 +1,14 @@
 use reqwest::Error as ReqwestError;
+use serde_json::Error as SerdeError;
+use std::error::Error as StdError;
 use std::fmt;
 use std::io::Error as IoError;
-use std::error::Error as StdError;
 
 #[derive(Debug)]
 pub enum Error {
     HttpError(String),
-    ResponseReadError(IoError),
+    Io(IoError),
+    JsonError(SerdeError),
 }
 
 use self::Error::*;
@@ -15,7 +17,8 @@ impl StdError for Error {
     fn description(&self) -> &str {
         match *self {
             HttpError(ref description) => description,
-            ResponseReadError(ref io_error) => io_error.description(),
+            Io(ref io_error) => io_error.description(),
+            JsonError(ref serde_error) => serde_error.description(),
         }
     }
 }
@@ -34,6 +37,12 @@ impl From<ReqwestError> for Error {
 
 impl From<IoError> for Error {
     fn from(error: IoError) -> Error {
-        ResponseReadError(error)
+        Io(error)
+    }
+}
+
+impl From<SerdeError> for Error {
+    fn from(error: SerdeError) -> Error {
+        JsonError(error)
     }
 }
