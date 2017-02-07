@@ -4,11 +4,15 @@ use error::Error;
 use git2::Repository;
 use std::env::current_dir;
 
-pub fn run(matches: &ArgMatches, config: Config) {
+pub fn run(matches: &ArgMatches, config: Config) -> Result<(), Error> {
     let stage = matches.value_of("stage").expect("Expected required stage");
+    let trekker = try!(trekker_name());
 
     println!("{:?}", config);
     println!("{}", stage);
+    println!("{}", trekker);
+
+    Ok(())
 }
 
 fn trekker_name() -> Result<String, Error> {
