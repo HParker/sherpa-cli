@@ -1,7 +1,9 @@
 addons:
   apt:
+    sources:
+      - kalakris-cmake
     packages:
-    - cmake
+      - cmake
 
 language: rust
 cache: cargo
@@ -9,3 +11,7 @@ rust:
   - stable
   - beta
   - nightly
+
+notifications:
+  email:
+    on_success: never
