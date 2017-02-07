@@ -1,5 +1,7 @@
 # Sherpa
 
+[![Build Status](https://travis-ci.org/mikeastock/sherpa-cli.svg?branch=master)](https://travis-ci.org/mikeastock/sherpa-cli)
+
 A CLI for using Sherpa from the command line.  This tool allows you to deploy
 from the comfort of your console.
 
