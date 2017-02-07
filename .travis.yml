@@ -4,6 +4,7 @@ addons:
     - cmake
 
 language: rust
+cache: cargo
 rust:
   - stable
   - beta
