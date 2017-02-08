@@ -16,17 +16,24 @@ pub fn run(matches: &ArgMatches, config: Config) -> Result<(), Error> {
 }
 
 fn trekker_name() -> Result<String, Error> {
-    Ok("sherpa-cli".into())
+    let origin_remote_url = try!(origin_remote_url());
+    origin_remote_url
+        .split('/')
+        .last()
+        .map(|last_piece| last_piece.split('.'))
+        .and_then(|last_piece_split| last_piece_split.rev().last())
+        .map(|name| name.into())
+        .ok_or(Error::GitRemoteUrl("Failed to find name from git remote".into()))
 }
 
 fn origin_remote_url() -> Result<String, Error> {
     let repo = try!(discover_repo());
     let origin = try!(repo.find_remote("origin"));
 
-    match origin.url() {
-        Some(url) => Ok(url.into()),
-        None => Err(Error::GitRemoteUrl("Failed".into())),
-    }
+    origin
+        .url()
+        .map(|url| url.into())
+        .ok_or(Error::GitRemoteUrl("No git remote origin found".into()))
 }
 
 fn discover_repo() -> Result<Repository, Error> {
