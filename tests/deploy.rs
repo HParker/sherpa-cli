@@ -1,5 +1,13 @@
-use sherpa::deploy::{origin_remote_url, trekker_name};
+use sherpa::deploy::{branch, origin_remote_url, trekker_name};
 use support::project;
+
+#[test]
+fn test_branch() {
+    let expected_branch = "master";
+    let project = project("test-branch").build();
+
+    assert_eq!(branch(&project.path()).unwrap(), expected_branch.to_owned());
+}
 
 #[test]
 fn test_trekker_name() {

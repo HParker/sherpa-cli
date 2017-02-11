@@ -18,6 +18,15 @@ pub fn run(matches: &ArgMatches, config: Config, optional_path: Option<&Path>) -
     Ok(())
 }
 
+pub fn branch(path: &Path) -> Result<String, Error> {
+    let repo = try!(discover_repo(path));
+    let head = try!(repo.head());
+    head
+        .shorthand()
+        .map(|string| string.into())
+        .ok_or(Error::GitRemoteUrl("Failed to find name from git remote".into()))
+}
+
 pub fn trekker_name(path: &Path) -> Result<String, Error> {
     let origin_remote_url = try!(origin_remote_url(path));
     origin_remote_url

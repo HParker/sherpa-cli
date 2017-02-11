@@ -31,6 +31,9 @@ impl ProjectBuilder {
                 "git init",
                 "git config push.default matching",
                 &format!("git remote add origin git@github.com:example/{}.git", self.name),
+                "touch example.txt",
+                "git add .",
+                "git commit -m Initial",
             ]
         );
 
