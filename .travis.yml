@@ -5,6 +5,10 @@ addons:
     packages:
       - cmake
 
+before_script:
+  - git config --global user.email "user@example.com"
+  - git config --global user.name "Example User"
+
 language: rust
 cache: cargo
 rust:
