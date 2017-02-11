@@ -39,6 +39,13 @@ fn test_save_config() {
 
 #[test]
 fn test_validate() {
+    let tempdir = TempDir::new("test_validate").expect("Create temp dir");
+    let tempdir_path_string = tempdir
+        .path()
+        .to_str()
+        .unwrap()
+        .to_owned();
+
     let mocked_base_url = Some(mockito::SERVER_URL);
 
     let new_token = "brand-new-token";
@@ -62,8 +69,10 @@ fn test_validate() {
 
     let config = Config::new(github_handle, github_token, token, expires_at);
 
-    let new_config = config.validate(mocked_base_url).unwrap();
+    let new_config = config.validate(mocked_base_url, Some(tempdir_path_string)).unwrap();
 
     assert_eq!(new_config.token, new_token);
     assert_eq!(new_config.expires_at, new_expires_at);
+
+    tempdir.close().expect("Remove temp dir");
 }

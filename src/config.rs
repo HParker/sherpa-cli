@@ -26,7 +26,7 @@ impl Config {
         }
     }
 
-    pub fn validate(self, base_url: Option<&str>) -> Result<Config, Error> {
+    pub fn validate(self, base_url: Option<&str>, path: Option<String>) -> Result<Config, Error> {
         if self.is_expired() {
             let response = try!(client::authenticate(base_url, &self.github_handle, &self.github_token));
             let config = Config::new(
@@ -34,7 +34,7 @@ impl Config {
                 &self.github_token,
                 &response.token,
                 response.expires_at);
-            save_config(config, None)
+            save_config(config, path)
         } else {
             Ok(self)
         }
@@ -45,11 +45,8 @@ impl Config {
     }
 }
 
-pub fn save_config(config: Config, optional_path: Option<String>) -> Result<Config, Error> {
-    let path = match optional_path {
-        Some(path) => path,
-        None => default_path(),
-    };
+pub fn save_config(config: Config, path: Option<String>) -> Result<Config, Error> {
+    let path = path.unwrap_or(default_path());
 
     let json = try!(serde_json::to_string(&config));
     try!(save_file(path, json));
