@@ -1,3 +1,4 @@
+use chrono::{DateTime, UTC};
 use error::Error;
 use serde_json;
 use std::env;
@@ -5,34 +6,54 @@ use std::fs::File;
 use std::fs::create_dir_all;
 use std::io::{Write, Read, Error as IoError};
 use std::path::Path;
+use client;
 
 #[derive(Clone, Serialize, Deserialize, Debug, PartialEq)]
 pub struct Config {
-    github_handle: String,
-    github_token: String,
-    token: String,
-    expires_at: String,
+    pub github_handle: String,
+    pub github_token: String,
+    pub token: String,
+    pub expires_at: DateTime<UTC>,
 }
 
 impl Config {
-    pub fn new(github_handle: &str, github_token: &str, token: &str, expires_at: &str) -> Config {
+    pub fn new(github_handle: &str, github_token: &str, token: &str, expires_at: DateTime<UTC>) -> Config {
         Config {
             github_handle: github_handle.into(),
             github_token: github_token.into(),
             token: token.into(),
-            expires_at: expires_at.into(),
+            expires_at: expires_at,
         }
+    }
+
+    pub fn validate(self, base_url: Option<&str>) -> Result<Config, Error> {
+        if self.is_expired() {
+            let response = try!(client::authenticate(base_url, &self.github_handle, &self.github_token));
+            let config = Config::new(
+                &self.github_handle,
+                &self.github_token,
+                &response.token,
+                response.expires_at);
+            save_config(config, None)
+        } else {
+            Ok(self)
+        }
+    }
+
+    fn is_expired(&self) -> bool {
+        true
     }
 }
 
-pub fn save_config(config: Config, optional_path: Option<String>) -> Result<(), Error> {
+pub fn save_config(config: Config, optional_path: Option<String>) -> Result<Config, Error> {
     let path = match optional_path {
         Some(path) => path,
         None => default_path(),
     };
 
     let json = try!(serde_json::to_string(&config));
-    save_file(path, json).map_err(Error::Io)
+    try!(save_file(path, json));
+    Ok(config)
 }
 
 pub fn load_config(optional_path: Option<String>) -> Option<Config> {

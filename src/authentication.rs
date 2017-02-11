@@ -12,12 +12,14 @@ pub fn run(matches: &ArgMatches) -> Result<(), Error> {
         .value_of("token")
         .expect("Expected required token");
 
-    let response = try!(authenticate(github_handle, github_token));
+    let response = try!(authenticate(None, github_handle, github_token));
     let config = Config::new(
         github_handle,
         github_token,
         &response.token,
-        &response.expires_at);
+        response.expires_at);
 
-    save_config(config, None)
+    try!(save_config(config, None));
+
+    Ok(())
 }

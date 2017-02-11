@@ -1,4 +1,5 @@
 use clap::ArgMatches;
+use client::create_deploy;
 use config::Config;
 use error::Error;
 use git2::Repository;
@@ -10,11 +11,10 @@ pub fn run(matches: &ArgMatches, config: Config, optional_path: Option<&Path>) -
     let path = optional_path.unwrap_or(&default_path);
     let stage = matches.value_of("stage").expect("Expected required stage");
     let trekker = try!(trekker_name(path));
+    let branch = try!(branch(path));
 
-    println!("{:?}", config);
-    println!("{}", stage);
-    println!("{}", trekker);
-
+    let response = try!(create_deploy(None, &trekker, &stage, &branch, config));
+    println!("{:?}", response);
     Ok(())
 }
 
