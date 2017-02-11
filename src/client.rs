@@ -23,7 +23,6 @@ pub fn authenticate(base_url: Option<&str>, github_handle: &str, github_token: &
     let client = try!(Client::new());
     let base_url = base_url.unwrap_or(DEFAULT_BASE_URL);
     let url = base_url.to_owned() + "/token";
-    println!("{:?}", url);
 
     let mut nested_body = HashMap::new();
     nested_body.insert("handle", github_handle);
