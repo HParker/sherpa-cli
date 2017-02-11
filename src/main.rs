@@ -10,7 +10,7 @@ fn main() {
 
     match matches.subcommand() {
         ("authenticate", Some(matches)) => authentication::run(matches).unwrap_or_else(handle_error),
-        ("deploy", Some(matches)) => deploy::run(matches, load_config()).unwrap_or_else(handle_error),
+        ("deploy", Some(matches)) => deploy::run(matches, load_config(), None).unwrap_or_else(handle_error),
         _ => unreachable!("The cli parser should prevent reaching here"),
     }
 }

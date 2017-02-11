@@ -1,4 +1,4 @@
-// #![deny(warnings)]
+#![deny(warnings)]
 
 extern crate sherpa;
 extern crate tempdir;
@@ -7,3 +7,4 @@ extern crate tempdir;
 mod support;
 
 mod config;
+mod deploy;

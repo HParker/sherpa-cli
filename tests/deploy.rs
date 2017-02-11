@@ -1,12 +1,19 @@
-use deploy::{origin_remote_url, trekker_name};
+use sherpa::deploy::{origin_remote_url, trekker_name};
+use support::project;
 
 #[test]
 fn test_trekker_name() {
-    assert_eq!(trekker_name().unwrap(), "sherpa-cli".to_owned());
+    let expected_trekker_name = "example-trekker-name";
+    let project = project(expected_trekker_name).build();
+
+    assert_eq!(trekker_name(&project.path()).unwrap(), expected_trekker_name.to_owned());
 }
 
 #[test]
 fn test_origin_remote_url() {
-    let expected_url = "git@github.com:mikeastock/sherpa-cli.git".to_owned();
-    assert_eq!(origin_remote_url().unwrap(), expected_url);
+    let expected_trekker_name = "example-trekker-name";
+    let project = project(expected_trekker_name).build();
+
+    let expected_url = "git@github.com:example/example-trekker-name.git".to_owned();
+    assert_eq!(origin_remote_url(&project.path()).unwrap(), expected_url);
 }
