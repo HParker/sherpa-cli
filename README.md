@@ -27,6 +27,16 @@ To get started run:
 sherpa authenticate <github-handle> <github-token>
 ```
 
+### Deploying
+
+Sherpa will infer what Trekker and branch you want to deploy to based on what
+directory you run the command from.
+
+To trigger a deploy run:
+```bash
+sherpa deploy <stage>
+```
+
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/mikeastock/sherpa-cli. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](contributor-covenant.org) code of conduct.
