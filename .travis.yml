@@ -15,10 +15,12 @@ rust:
 before_script:
   - git config --global user.email "user@example.com"
   - git config --global user.name "Example User"
+  - pip install 'travis-cargo<0.2' --user
+  - export PATH=$HOME/.local/bin:$PATH
 
 script:
-  - cargo build --features mock
-  - cargo test --features mock
+  - tavis-cargo build --features mock
+  - tavis-cargo test --features mock
 
 notifications:
   email:
