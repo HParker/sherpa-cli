@@ -93,3 +93,24 @@ fn default_path() -> String {
 
     path.to_str().unwrap().into()
 }
+
+#[cfg(test)]
+mod test {
+    extern crate time;
+
+    use chrono::UTC;
+    use super::Config;
+    use self::time::Duration;
+
+    #[test]
+    fn test_is_expired() {
+        let github_handle = "mikeastock";
+        let github_token = "some-github-token";
+        let token = "some-expired-token";
+        let expires_at = UTC::now() - Duration::days(2);
+
+        let config = Config::new(github_handle, github_token, token, expires_at);
+
+        assert!(config.is_expired())
+    }
+}
