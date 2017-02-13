@@ -38,6 +38,18 @@ fn test_save_config() {
 }
 
 #[test]
+fn test_is_expired() {
+    let github_handle = "mikeastock";
+    let github_token = "some-github-token";
+    let token = "some-expired-token";
+    let expires_at = UTC::now() - Duration::days(2);
+
+    let config = Config::new(github_handle, github_token, token, expires_at);
+
+    assert!(config.is_expired())
+}
+
+#[test]
 fn test_validate() {
     let tempdir = TempDir::new("test_validate").expect("Create temp dir");
     let tempdir_path_string = tempdir

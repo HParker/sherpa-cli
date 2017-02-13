@@ -40,7 +40,7 @@ impl Config {
         }
     }
 
-    fn is_expired(&self) -> bool {
+    pub fn is_expired(&self) -> bool {
         UTC::now() > self.expires_at
     }
 }
