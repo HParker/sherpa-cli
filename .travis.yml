@@ -19,8 +19,8 @@ before_script:
   - export PATH=$HOME/.local/bin:$PATH
 
 script:
-  - tavis-cargo build --features mock
-  - tavis-cargo test --features mock
+  - travis-cargo build --features mock
+  - travis-cargo test --features mock
 
 notifications:
   email:
