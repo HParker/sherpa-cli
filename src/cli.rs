@@ -1,14 +1,14 @@
 use clap::{App, AppSettings, Arg, SubCommand};
 
 pub fn build_cli() -> App<'static, 'static> {
-    let setup_subcommand = SubCommand::with_name("authenticate")
+    let setup_subcommand = SubCommand::with_name("auth")
         .about("Setup Sherpa CLI")
         .arg(Arg::with_name("handle")
              .help("Github handle")
              .index(1)
              .required(true))
         .arg(Arg::with_name("token")
-             .help("Personal Github Access Token")
+             .help("Personal Github Access Token\nThe token needs to have read:org permissions")
              .index(2)
              .required(true));
 

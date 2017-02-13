@@ -9,7 +9,7 @@ fn main() {
     let matches = cli::build_cli().get_matches();
 
     match matches.subcommand() {
-        ("authenticate", Some(matches)) => authentication::run(matches).unwrap_or_else(handle_error),
+        ("auth", Some(matches)) => authentication::run(matches).unwrap_or_else(handle_error),
         ("deploy", Some(matches)) => deploy::run(matches, load_config(), None).unwrap_or_else(handle_error),
         _ => unreachable!("The cli parser should prevent reaching here"),
     }
