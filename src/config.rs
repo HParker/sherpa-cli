@@ -41,7 +41,7 @@ impl Config {
     }
 
     fn is_expired(&self) -> bool {
-        true
+        UTC::now() > self.expires_at
     }
 }
 
