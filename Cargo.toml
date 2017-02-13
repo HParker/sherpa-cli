@@ -8,19 +8,24 @@ documentation = "https://github.com/mikeastock/sherpa-cli"
 homepage = "https://github.com/mikeastock/sherpa-cli"
 repository = "https://github.com/mikeastock/sherpa-cli"
 
+[features]
+default = []
+mock = []
+
 [dependencies]
 chrono = { version = "0.3", features = ["serde"] }
 clap = "2.20"
 git2 = "0.6"
+mockito = "0.2"
 reqwest = "0.4.0"
 serde = "0.9"
 serde_derive = "0.9"
 serde_json = "0.9"
 
 [dev-dependencies]
-mockito = "0.2"
 tempdir = "0.3"
 time = "0.1"
 
 [[test]]
 name = "tests"
+required-features = ["mock"]

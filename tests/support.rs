@@ -1,6 +1,6 @@
 use std::path::{PathBuf, Path};
 use std::process::{Command, Output};
-use std::str;
+use std::{env, str};
 use tempdir::TempDir;
 
 pub fn project(name: &str) -> ProjectBuilder {
@@ -12,7 +12,7 @@ pub struct ProjectBuilder {
 }
 
 impl ProjectBuilder {
-    fn new(name: &str) -> Self {
+    pub fn new(name: &str) -> Self {
         ProjectBuilder {
             name: name.into(),
         }
@@ -66,6 +66,11 @@ impl Project {
         for command in commands.iter() {
             self.setup_command(command);
         };
+    }
+
+    pub fn sherpa_command(&self, command: &str) -> TestCommand {
+        let command_pieces = command.split(' ').collect::<Vec<&str>>();
+        TestCommand::new(&self.path(), command_pieces, path_to_sherpa_binary())
     }
 
     pub fn path(&self) -> PathBuf {
@@ -128,4 +133,15 @@ impl TestCommandResult {
                 self.stdout(),
                 self.stderr())
     }
+}
+
+fn path_to_sherpa_binary() -> String {
+    let path = Path::new(&env::var_os("CARGO_MANIFEST_DIR").unwrap())
+        .join("target")
+        .join("debug")
+        .join("sherpa")
+        .to_str().unwrap()
+        .to_owned();
+    println!("Path is: {:?}", path);
+    path
 }

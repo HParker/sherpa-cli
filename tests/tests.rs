@@ -10,5 +10,6 @@ extern crate time;
 // Module full of support functions and structs for integration tests
 mod support;
 
+mod auth;
 mod config;
 mod deploy;

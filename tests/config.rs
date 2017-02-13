@@ -56,8 +56,8 @@ fn test_validate() {
         "expires_at": new_expires_at.to_rfc3339(),
     });
 
-    mock("POST", "/token")
-        .with_status(201)
+    let mut mock = mock("POST", "/token");
+    mock.with_status(201)
         .with_header("Content-Type", "accept/json")
         .with_body(&stubbed_repsonse.to_string())
         .create();
@@ -75,4 +75,5 @@ fn test_validate() {
     assert_eq!(new_config.expires_at, new_expires_at);
 
     tempdir.close().expect("Remove temp dir");
+    mock.remove();
 }

@@ -5,16 +5,20 @@ addons:
     packages:
       - cmake
 
-before_script:
-  - git config --global user.email "user@example.com"
-  - git config --global user.name "Example User"
-
 language: rust
 cache: cargo
 rust:
   - stable
   - beta
   - nightly
+
+before_script:
+  - git config --global user.email "user@example.com"
+  - git config --global user.name "Example User"
+
+script:
+  - cargo build --features mock
+  - cargo test --features mock
 
 notifications:
   email:
