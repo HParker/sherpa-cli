@@ -3,7 +3,6 @@
 extern crate chrono;
 extern crate clap;
 extern crate git2;
-extern crate mockito;
 extern crate reqwest;
 extern crate serde;
 #[macro_use] extern crate serde_derive;
