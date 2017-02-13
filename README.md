@@ -10,6 +10,7 @@ from the comfort of your console.
 Homebrew:
 
 ```bash
+brew tap mikeastock/formulae
 brew install sherpa
 ```
 
