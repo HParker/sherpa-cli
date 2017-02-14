@@ -19,7 +19,12 @@ before_script:
   - export PATH=$HOME/.local/bin:$PATH
 
 script:
-  - travis-cargo test -- --features "mock"
+- |
+  if [[ "$TRAVIS_RUST_VERSION" == nightly* ]]; then
+    travis-cargo test -- --no-default-features --features "unstable mock"
+  else
+    travis-cargo test -- --no-default-features --features "mock"
+  fi
 
 notifications:
   email:
