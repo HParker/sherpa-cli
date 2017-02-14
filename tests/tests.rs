@@ -1,4 +1,4 @@
-// #![deny(warnings)]
+#![deny(warnings)]
 
 extern crate chrono;
 extern crate mockito;

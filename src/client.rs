@@ -1,15 +1,15 @@
 use chrono::{DateTime, UTC};
 use config::Config;
 use error::Error;
-#[cfg(feature = "mock")] use mockito;
+#[cfg(any(test, feature = "mock"))] use mockito;
 use reqwest::Client;
 use reqwest::header::Authorization;
 use std::collections::HashMap;
 use std::io::Read;
 
-#[cfg(feature = "mock")]
+#[cfg(any(test, feature = "mock"))]
 const DEFAULT_BASE_URL: &'static str = mockito::SERVER_URL;
-#[cfg(not(feature = "mock"))]
+#[cfg(not(any(test, feature = "mock")))]
 const DEFAULT_BASE_URL: &'static str = "https://sherpa.procoretech.com/api/v1";
 
 #[derive(Debug, Deserialize)]
