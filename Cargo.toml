@@ -11,6 +11,7 @@ repository = "https://github.com/mikeastock/sherpa-cli"
 [features]
 default = []
 mock = []
+unstable = []
 
 [dependencies]
 chrono = { version = "0.3", features = ["serde"] }
