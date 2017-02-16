@@ -11,5 +11,4 @@ extern crate time;
 mod support;
 
 mod auth;
-mod config;
 mod deploy;
