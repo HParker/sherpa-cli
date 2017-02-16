@@ -22,6 +22,9 @@ cargo install sherpa
 
 ## Usage
 
+To authenticate with Sherpa you will need a personal Github token that has `read:org`.
+You can create one [here](https://github.com/settings/tokens/new)
+
 To get started run:
 
 ```bash
