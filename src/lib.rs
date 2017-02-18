@@ -25,8 +25,8 @@ pub fn handle_error<E: StdError, T>(error: E) -> T {
     exit(1);
 }
 
-pub fn load_config() -> Config {
-    match config::load_config(None) {
+pub fn load_config(config_path: String) -> Config {
+    match config::load_config(config_path) {
         Some(config) => config,
         None => {
             println!("You must be authenticated to use Sherpa\nPlease run `sherpa authenticate <github_handle> <github_token>`");

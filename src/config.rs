@@ -26,7 +26,7 @@ impl Config {
         }
     }
 
-    pub fn validate(self, base_url: Option<&str>, path: Option<String>) -> Result<Config, Error> {
+    pub fn validate(self, base_url: Option<&str>, path: String) -> Result<Config, Error> {
         if self.is_expired() {
             let response = try!(client::authenticate(base_url, &self.github_handle, &self.github_token));
             let config = Config::new(
@@ -45,20 +45,13 @@ impl Config {
     }
 }
 
-pub fn save_config(config: Config, path: Option<String>) -> Result<Config, Error> {
-    let path = path.unwrap_or(default_path());
-
+pub fn save_config(config: Config, path: String) -> Result<Config, Error> {
     let json = try!(serde_json::to_string(&config));
     try!(save_file(path, json));
     Ok(config)
 }
 
-pub fn load_config(optional_path: Option<String>) -> Option<Config> {
-    let path = match optional_path {
-        Some(path) => path,
-        None => default_path(),
-    };
-
+pub fn load_config(path: String) -> Option<Config> {
     match load_file(path) {
         Ok(json) => {
             match serde_json::from_str::<Config>(&json) {
@@ -83,7 +76,7 @@ fn load_file(path: String) -> Result<String, IoError> {
     Ok(json)
 }
 
-fn default_path() -> String {
+pub fn default_path() -> String {
     let home_path = env::home_dir().unwrap();
     let path = home_path.join(".sherpa");
 

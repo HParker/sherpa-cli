@@ -25,5 +25,10 @@ pub fn build_cli() -> App<'static, 'static> {
         .after_help("You can also run `sherpa SUBCOMMAND -h` to get more information about that subcommand.")
         .subcommand(setup_subcommand)
         .subcommand(deploy_subcommand)
+        .arg(Arg::with_name("config")
+             .takes_value(true)
+             .help("Override config directory")
+             .short("c")
+             .long("config"))
         .setting(AppSettings::SubcommandRequiredElseHelp)
 }

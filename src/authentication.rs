@@ -3,7 +3,7 @@ use config::{Config, save_config};
 use error::Error;
 use client::authenticate;
 
-pub fn run(matches: &ArgMatches) -> Result<(), Error> {
+pub fn run(matches: &ArgMatches, config_path: String) -> Result<(), Error> {
     let github_handle = matches
         .value_of("handle")
         .expect("Expected required handle");
@@ -19,7 +19,7 @@ pub fn run(matches: &ArgMatches) -> Result<(), Error> {
         &response.token,
         response.expires_at);
 
-    try!(save_config(config, None));
+    try!(save_config(config, config_path));
 
     Ok(())
 }
