@@ -16,7 +16,7 @@ fn main() {
 
     match matches.subcommand() {
         ("auth", Some(matches)) => authentication::run(matches, config_path).unwrap_or_else(handle_error),
-        ("deploy", Some(matches)) => deploy::run(matches, load_config(config_path), config_path).unwrap_or_else(handle_error),
+        ("deploy", Some(matches)) => deploy::run(matches, load_config(config_path), None).unwrap_or_else(handle_error),
         _ => unreachable!("The cli parser should prevent reaching here"),
     }
 }

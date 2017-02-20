@@ -46,8 +46,8 @@ pub fn authenticate(base_url: Option<&str>, github_handle: &str, github_token: &
     }
 }
 
-pub fn create_deploy(base_url: Option<&str>, config_path: String, trekker: &str, stage: &str, branch: &str, config: Config) -> Result<CreateDeployResponse, Error> {
-    let config = try!(config.validate(base_url, config_path));
+pub fn create_deploy(base_url: Option<&str>, trekker: &str, stage: &str, branch: &str, config: Config) -> Result<CreateDeployResponse, Error> {
+    let config = try!(config.validate(base_url));
 
     let client = try!(Client::new());
     let base_url = base_url.unwrap_or(DEFAULT_BASE_URL);

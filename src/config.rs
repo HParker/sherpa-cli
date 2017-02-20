@@ -10,31 +10,34 @@ use std::path::Path;
 
 #[derive(Clone, Serialize, Deserialize, Debug, PartialEq)]
 pub struct Config {
+    pub expires_at: DateTime<UTC>,
     pub github_handle: String,
     pub github_token: String,
+    pub path: String,
     pub token: String,
-    pub expires_at: DateTime<UTC>,
 }
 
 impl Config {
-    pub fn new(github_handle: &str, github_token: &str, token: &str, expires_at: DateTime<UTC>) -> Config {
+    pub fn new(github_handle: &str, github_token: &str, token: &str, expires_at: DateTime<UTC>, path: String) -> Config {
         Config {
+            expires_at: expires_at,
             github_handle: github_handle.into(),
             github_token: github_token.into(),
+            path: path.into(),
             token: token.into(),
-            expires_at: expires_at,
         }
     }
 
-    pub fn validate(self, base_url: Option<&str>, path: String) -> Result<Config, Error> {
+    pub fn validate(self, base_url: Option<&str>) -> Result<Config, Error> {
         if self.is_expired() {
             let response = try!(client::authenticate(base_url, &self.github_handle, &self.github_token));
             let config = Config::new(
                 &self.github_handle,
                 &self.github_token,
                 &response.token,
-                response.expires_at);
-            save_config(config, path)
+                response.expires_at,
+                self.path);
+            save_config(config)
         } else {
             Ok(self)
         }
@@ -45,9 +48,9 @@ impl Config {
     }
 }
 
-pub fn save_config(config: Config, path: String) -> Result<Config, Error> {
+pub fn save_config(config: Config) -> Result<Config, Error> {
     let json = try!(serde_json::to_string(&config));
-    try!(save_file(path, json));
+    try!(save_file(&config.path, json));
     Ok(config)
 }
 
@@ -63,8 +66,8 @@ pub fn load_config(path: String) -> Option<Config> {
     }
 }
 
-fn save_file(path: String, json: String) -> Result<(), IoError> {
-    let config_path = Path::new(&path).join("config");
+fn save_file(path: &str, json: String) -> Result<(), IoError> {
+    let config_path = Path::new(path).join("config");
     let mut file = try!(File::create(config_path));
     file.write_all(json.as_bytes())
 }
@@ -104,8 +107,9 @@ mod test {
         let github_token = "some-github-token";
         let token = "some-expired-token";
         let expires_at = UTC::now() - Duration::days(2);
+        let path = "~/.sherpa";
 
-        let config = Config::new(github_handle, github_token, token, expires_at);
+        let config = Config::new(github_handle, github_token, token, expires_at, path.into());
 
         assert!(config.is_expired())
     }

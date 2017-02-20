@@ -17,9 +17,10 @@ pub fn run(matches: &ArgMatches, config_path: String) -> Result<(), Error> {
         github_handle,
         github_token,
         &response.token,
-        response.expires_at);
+        response.expires_at,
+        config_path);
 
-    try!(save_config(config, config_path));
+    try!(save_config(config));
 
     Ok(())
 }
