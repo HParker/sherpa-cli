@@ -23,9 +23,10 @@ fn test_auth() {
     let github_token = "some-token";
 
     let project = ProjectBuilder::new("auth-test").build();
+    let config_path = project.path().join("config");
 
     let result = project
-        .sherpa_command(&format!("auth {} {}", github_handle, github_token))
+        .sherpa_command(&format!("-c {} auth {} {}", config_path.to_str().unwrap(), github_handle, github_token))
         .run();
 
     assert!(result.is_success(), result.failure_message("command to succeed"));
