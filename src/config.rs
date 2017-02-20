@@ -4,7 +4,6 @@ use error::Error;
 use serde_json;
 use std::env;
 use std::fs::File;
-use std::fs::create_dir_all;
 use std::io::{Write, Read, Error as IoError};
 use std::path::Path;
 
@@ -82,10 +81,6 @@ fn load_file(path: String) -> Result<String, IoError> {
 pub fn default_path() -> String {
     let home_path = env::home_dir().unwrap();
     let path = home_path.join(".sherpa");
-
-    if !path.exists() {
-        create_dir_all(path.clone()).unwrap();
-    }
 
     path.to_str().unwrap().into()
 }
