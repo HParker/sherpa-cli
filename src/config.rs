@@ -67,7 +67,7 @@ pub fn load_config(path: String) -> Option<Config> {
 }
 
 fn save_file(path: &str, json: String) -> Result<(), IoError> {
-    let config_path = Path::new(path).join("config");
+    let config_path = Path::new(path);
     let mut file = try!(File::create(config_path));
     file.write_all(json.as_bytes())
 }
