@@ -1,7 +1,10 @@
+use chrono::UTC;
+use sherpa::config::{save_config, Config};
 use std::path::{PathBuf, Path};
 use std::process::{Command, Output};
 use std::{env, str};
 use tempdir::TempDir;
+use time::Duration;
 
 pub fn project(name: &str) -> ProjectBuilder {
     ProjectBuilder::new(name)
@@ -22,6 +25,7 @@ impl ProjectBuilder {
         let work_dir = TempDir::new(&self.name).unwrap();
 
         let project = Project {
+            config: None,
             directory: work_dir,
             name: self.name.clone(),
         };
@@ -42,6 +46,7 @@ impl ProjectBuilder {
 }
 
 pub struct Project {
+    config: Option<Config>,
     directory: TempDir,
     pub name: String,
 }
@@ -75,6 +80,28 @@ impl Project {
 
     pub fn path(&self) -> PathBuf {
         self.directory.path().into()
+    }
+
+    pub fn setup_config(&mut self) {
+        let config = self.default_config();
+        save_config(config.clone()).expect("Save default config in project");
+        self.config = Some(config);
+    }
+
+    pub fn config_path(&self) -> String {
+        match self.config {
+            Some(ref config) => config.path.clone(),
+            None => panic!("Expected a config to exist"),
+        }
+    }
+
+    fn default_config(&self) -> Config {
+        Config::new(
+            "mikeastock",
+            "example-github-token",
+            "example-token",
+            UTC::now() + Duration::days(2),
+            self.path().join("config").to_str().unwrap().into())
     }
 }
 
