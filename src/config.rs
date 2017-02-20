@@ -73,7 +73,7 @@ fn save_file(path: &str, json: String) -> Result<(), IoError> {
 }
 
 fn load_file(path: String) -> Result<String, IoError> {
-    let mut file = try!(File::open(Path::new(&path).join("config").clone()));
+    let mut file = try!(File::open(Path::new(&path).clone()));
     let mut json = String::new();
     try!(file.read_to_string(&mut json));
     Ok(json)
@@ -117,11 +117,6 @@ mod test {
     #[test]
     fn test_validate() {
         let tempdir = TempDir::new("test_validate").expect("Create temp dir");
-        let tempdir_path_string = tempdir
-            .path()
-            .to_str()
-            .unwrap()
-            .to_owned();
 
         let mocked_base_url = Some(mockito::SERVER_URL);
 
@@ -143,10 +138,11 @@ mod test {
         let github_token = "some-github-token";
         let token = "some-expired-token";
         let expires_at = UTC::now() - Duration::days(2);
+        let path = tempdir.path().join("config").to_str().unwrap().to_owned();
 
-        let config = Config::new(github_handle, github_token, token, expires_at);
+        let config = Config::new(github_handle, github_token, token, expires_at, path);
 
-        let new_config = config.validate(mocked_base_url, Some(tempdir_path_string)).unwrap();
+        let new_config = config.validate(mocked_base_url).unwrap();
 
         assert_eq!(new_config.token, new_token);
         assert_eq!(new_config.expires_at, new_expires_at);
@@ -162,25 +158,19 @@ mod test {
         let token = "some-sherpa-token";
         let expires_at = UTC::now();
 
-        let config = Config::new(github_handle, github_token, token, expires_at);
-
         let tempdir = TempDir::new("test_save_config").expect("Create temp dir");
-
-        let tempdir_path_string = tempdir
+        let config_path_string = tempdir
             .path()
+            .join("config")
             .to_str()
             .unwrap()
             .to_owned();
 
-        save_config(config.clone(), Some(tempdir_path_string)).unwrap();
+        let config = Config::new(github_handle, github_token, token, expires_at, config_path_string.clone());
 
-        let config_path_string = tempdir
-            .path()
-            .to_str()
-            .unwrap()
-            .into();
+        save_config(config.clone()).unwrap();
 
-        let expected_config = load_config(Some(config_path_string));
+        let expected_config = load_config(config_path_string);
 
         assert_eq!(expected_config, Some(config));
 
