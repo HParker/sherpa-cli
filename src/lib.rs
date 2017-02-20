@@ -6,8 +6,10 @@ extern crate git2;
 extern crate mockito;
 extern crate reqwest;
 extern crate serde;
-#[macro_use] extern crate serde_derive;
-#[cfg_attr(test, macro_use)] extern crate serde_json;
+#[macro_use]
+extern crate serde_derive;
+#[cfg_attr(test, macro_use)]
+extern crate serde_json;
 
 pub mod authentication;
 pub mod cli;
@@ -31,6 +33,6 @@ pub fn load_config(config_path: String) -> Config {
         None => {
             println!("You must be authenticated to use Sherpa\nPlease run `sherpa authenticate <github_handle> <github_token>`");
             exit(1);
-        },
+        }
     }
 }

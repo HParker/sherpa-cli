@@ -17,7 +17,12 @@ pub struct Config {
 }
 
 impl Config {
-    pub fn new(github_handle: &str, github_token: &str, token: &str, expires_at: DateTime<UTC>, path: String) -> Config {
+    pub fn new(github_handle: &str,
+               github_token: &str,
+               token: &str,
+               expires_at: DateTime<UTC>,
+               path: String)
+               -> Config {
         Config {
             expires_at: expires_at,
             github_handle: github_handle.into(),
@@ -29,13 +34,13 @@ impl Config {
 
     pub fn validate(self, base_url: Option<&str>) -> Result<Config, Error> {
         if self.is_expired() {
-            let response = try!(client::authenticate(base_url, &self.github_handle, &self.github_token));
-            let config = Config::new(
-                &self.github_handle,
-                &self.github_token,
-                &response.token,
-                response.expires_at,
-                self.path);
+            let response =
+                try!(client::authenticate(base_url, &self.github_handle, &self.github_token));
+            let config = Config::new(&self.github_handle,
+                                     &self.github_token,
+                                     &response.token,
+                                     response.expires_at,
+                                     self.path);
             save_config(config)
         } else {
             Ok(self)
@@ -60,7 +65,7 @@ pub fn load_config(path: String) -> Option<Config> {
                 Ok(config) => Some(config),
                 Err(_) => None,
             }
-        },
+        }
         Err(_) => None,
     }
 }
@@ -154,14 +159,17 @@ mod test {
         let expires_at = UTC::now();
 
         let tempdir = TempDir::new("test_save_config").expect("Create temp dir");
-        let config_path_string = tempdir
-            .path()
+        let config_path_string = tempdir.path()
             .join("config")
             .to_str()
             .unwrap()
             .to_owned();
 
-        let config = Config::new(github_handle, github_token, token, expires_at, config_path_string.clone());
+        let config = Config::new(github_handle,
+                                 github_token,
+                                 token,
+                                 expires_at,
+                                 config_path_string.clone());
 
         save_config(config.clone()).unwrap();
 

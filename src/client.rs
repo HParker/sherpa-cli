@@ -1,7 +1,8 @@
 use chrono::{DateTime, UTC};
 use config::Config;
 use error::Error;
-#[cfg(any(test, feature = "mock"))] use mockito;
+#[cfg(any(test, feature = "mock"))]
+use mockito;
 use reqwest::Client;
 use reqwest::header::Authorization;
 use std::collections::HashMap;
@@ -23,7 +24,10 @@ pub struct CreateDeployResponse {
     pub messages: Vec<String>,
 }
 
-pub fn authenticate(base_url: Option<&str>, github_handle: &str, github_token: &str) -> Result<AuthenticateResponse, Error> {
+pub fn authenticate(base_url: Option<&str>,
+                    github_handle: &str,
+                    github_token: &str)
+                    -> Result<AuthenticateResponse, Error> {
     let client = try!(Client::new());
     let base_url = base_url.unwrap_or(DEFAULT_BASE_URL);
     let url = base_url.to_owned() + "/token";
@@ -46,7 +50,12 @@ pub fn authenticate(base_url: Option<&str>, github_handle: &str, github_token: &
     }
 }
 
-pub fn create_deploy(base_url: Option<&str>, trekker: &str, stage: &str, branch: &str, config: Config) -> Result<CreateDeployResponse, Error> {
+pub fn create_deploy(base_url: Option<&str>,
+                     trekker: &str,
+                     stage: &str,
+                     branch: &str,
+                     config: Config)
+                     -> Result<CreateDeployResponse, Error> {
     let config = try!(config.validate(base_url));
 
     let client = try!(Client::new());
@@ -61,8 +70,7 @@ pub fn create_deploy(base_url: Option<&str>, trekker: &str, stage: &str, branch:
     let mut body = HashMap::new();
     body.insert("deploy", deploy);
 
-    let request = client
-        .post(&url)
+    let request = client.post(&url)
         .header(Authorization(format!("Token token={}", config.token)))
         .json(&body);
 
