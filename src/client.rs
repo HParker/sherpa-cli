@@ -54,7 +54,8 @@ pub fn create_deploy(base_url: Option<&str>,
                      trekker: &str,
                      stage: &str,
                      branch: &str,
-                     config: Config)
+                     config: Config,
+                     dry_run: bool)
                      -> Result<CreateDeployResponse, Error> {
     let config = try!(config.validate(base_url));
 
@@ -70,17 +71,23 @@ pub fn create_deploy(base_url: Option<&str>,
     let mut body = HashMap::new();
     body.insert("deploy", deploy);
 
-    let request = client.post(&url)
-        .header(Authorization(format!("Token token={}", config.token)))
-        .json(&body);
-
-    let mut response = try!(request.send());
-
-    if response.status().is_success() {
-        Ok(try!(response.json::<CreateDeployResponse>()))
+    if dry_run {
+        println!("{:?}", url);
+        println!("{:?}", body);
+        Ok(CreateDeployResponse{messages: vec!["".to_string()]})
     } else {
-        let mut response_body = String::new();
-        try!(response.read_to_string(&mut response_body));
-        Err(Error::Http(response_body))
+        let request = client.post(&url)
+            .header(Authorization(format!("Token token={}", config.token)))
+            .json(&body);
+
+        let mut response = try!(request.send());
+
+        if response.status().is_success() {
+            Ok(try!(response.json::<CreateDeployResponse>()))
+        } else {
+            let mut response_body = String::new();
+            try!(response.read_to_string(&mut response_body));
+            Err(Error::Http(response_body))
+        }
     }
 }

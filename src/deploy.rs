@@ -15,9 +15,9 @@ pub fn run(matches: &ArgMatches,
     let stage = matches.value_of("stage").expect("Expected required stage");
     let trekker = try!(trekker_name(path));
     let branch = try!(branch(path));
-
-    let response = try!(create_deploy(None, &trekker, &stage, &branch, config));
+    let response = try!(create_deploy(None, &trekker, &stage, &branch, config, matches.is_present("dry run")));
     println!("{:?}", response);
+
     Ok(())
 }
 

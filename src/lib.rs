@@ -28,10 +28,11 @@ pub fn handle_error<E: StdError, T>(error: E) -> T {
 }
 
 pub fn load_config(config_path: String) -> Config {
+    println!("{:?}", config_path);
     match config::load_config(config_path) {
         Some(config) => config,
         None => {
-            println!("You must be authenticated to use Sherpa\nPlease run `sherpa authenticate <github_handle> <github_token>`");
+            println!("You must be authenticated to use Sherpa\nPlease run `sherpa auth <github_handle> <github_token>`");
             exit(1);
         }
     }

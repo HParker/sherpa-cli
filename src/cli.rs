@@ -14,6 +14,10 @@ pub fn build_cli() -> App<'static, 'static> {
 
     let deploy_subcommand = SubCommand::with_name("deploy")
         .about("Deploy to a stage")
+        .arg(Arg::with_name("dry run")
+             .help("output the API requests sherpa-cli plans to call")
+             .short("d")
+             .long("dry-run"))
         .arg(Arg::with_name("stage")
             .help("Sherpa stage")
             .index(1)
